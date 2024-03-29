@@ -1,32 +1,39 @@
 package in.anshdevs.task_zephyr.scheduler.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.*;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "jobs")
 public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    public String Id;
-
-    public String Job_name;
-    public String scheduled_at;
-    public String scheduled_for;
-
-
-    public Job() {}
-
-    //! ---------- Getter & Setters ----------------
+    @Column(name = "id")
+    @JsonIgnore
+    private String Id;
+    @Column(name = "name")
+    private String Jobname;
+    @Column(name = "status")
+    private String Status;
 
 
-    public Job(String id, String job_name, String scheduled_at, String scheduled_for) {
+
+    @Column(name = "type")
+    private String JobType;
+    @Column(name = "scheduled_at")
+    private String scheduled_at;
+    @Column(name = "scheduled_for")
+    private String scheduled_for;
+
+    public Job(String id, String job_name, String jobType, String scheduled_at, String scheduled_for) {
         Id = id;
-        Job_name = job_name;
+        Jobname = job_name;
+        JobType = jobType;
         this.scheduled_at = scheduled_at;
         this.scheduled_for = scheduled_for;
     }
+
+    public Job() {}
 
     public String getId() {
         return Id;
@@ -35,13 +42,13 @@ public class Job {
     public void setId(String id) {
         Id = id;
     }
-
+    @JsonGetter("name")
     public String getJob_name() {
-        return Job_name;
+        return Jobname;
     }
-
+    @JsonSetter("name")
     public void setJob_name(String job_name) {
-        Job_name = job_name;
+        Jobname = job_name;
     }
 
     public String getScheduled_at() {
@@ -58,5 +65,20 @@ public class Job {
 
     public void setScheduled_for(String scheduled_for) {
         this.scheduled_for = scheduled_for;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
+    }
+    public String getJobType() {
+        return JobType;
+    }
+
+    public void setJobType(String jobType) {
+        JobType = jobType;
     }
 }
