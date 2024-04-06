@@ -15,9 +15,6 @@ public class Job {
     private String Jobname;
     @Column(name = "status")
     private String Status;
-
-
-
     @Column(name = "type")
     private String JobType;
     @Column(name = "scheduled_at")
@@ -74,10 +71,12 @@ public class Job {
     public void setStatus(String status) {
         Status = status;
     }
+    @JsonGetter("type")
     public String getJobType() {
         return JobType;
     }
 
+    @JsonGetter("type")
     public void setJobType(String jobType) {
         JobType = jobType;
     }

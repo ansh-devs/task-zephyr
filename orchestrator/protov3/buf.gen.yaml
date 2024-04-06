@@ -1,0 +1,9 @@
+version: v1
+managed:
+  enabled: true
+  optimize_for: CODE_SIZE
+  go_package_prefix:
+    default: github.com/ansh-devs/task-zephyr/protov3/gen
+    except:
+      - buf.build/googleapis/googleapis
+plugins:
