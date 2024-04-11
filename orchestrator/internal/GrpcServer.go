@@ -5,7 +5,9 @@ import (
 	pb "github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/grpc/status"
 	"net"
 	"sync"
 )
@@ -37,6 +39,10 @@ func (s *Orchestrator) SaveResult(ctx context.Context, request *pb.SaveResultReq
 	return &pb.SaveResultResponse{
 		Message: "result saved",
 	}, nil
+}
+
+func (s *Orchestrator) UpdateTaskStatus(context.Context, *pb.UpdateTaskStatusRequest) (*pb.UpdateTaskStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTaskStatus not implemented")
 }
 
 func (s *Orchestrator) Serve() {

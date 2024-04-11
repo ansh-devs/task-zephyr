@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	OrchestratorService_AssignTaskToWorker_FullMethodName = "/protov3.OrchestratorService/AssignTaskToWorker"
 	OrchestratorService_SaveResult_FullMethodName         = "/protov3.OrchestratorService/SaveResult"
+	OrchestratorService_UpdateTaskStatus_FullMethodName   = "/protov3.OrchestratorService/UpdateTaskStatus"
 )
 
 // OrchestratorServiceClient is the client API for OrchestratorService service.
@@ -29,6 +30,7 @@ const (
 type OrchestratorServiceClient interface {
 	AssignTaskToWorker(ctx context.Context, in *AssignTaskToWorkerRequest, opts ...grpc.CallOption) (*AssignTaskToWorkerResponse, error)
 	SaveResult(ctx context.Context, in *SaveResultRequest, opts ...grpc.CallOption) (*SaveResultResponse, error)
+	UpdateTaskStatus(ctx context.Context, in *UpdateTaskStatusRequest, opts ...grpc.CallOption) (*UpdateTaskStatusResponse, error)
 }
 
 type orchestratorServiceClient struct {
@@ -57,12 +59,22 @@ func (c *orchestratorServiceClient) SaveResult(ctx context.Context, in *SaveResu
 	return out, nil
 }
 
+func (c *orchestratorServiceClient) UpdateTaskStatus(ctx context.Context, in *UpdateTaskStatusRequest, opts ...grpc.CallOption) (*UpdateTaskStatusResponse, error) {
+	out := new(UpdateTaskStatusResponse)
+	err := c.cc.Invoke(ctx, OrchestratorService_UpdateTaskStatus_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrchestratorServiceServer is the server API for OrchestratorService service.
 // All implementations must embed UnimplementedOrchestratorServiceServer
 // for forward compatibility
 type OrchestratorServiceServer interface {
 	AssignTaskToWorker(context.Context, *AssignTaskToWorkerRequest) (*AssignTaskToWorkerResponse, error)
 	SaveResult(context.Context, *SaveResultRequest) (*SaveResultResponse, error)
+	UpdateTaskStatus(context.Context, *UpdateTaskStatusRequest) (*UpdateTaskStatusResponse, error)
 	mustEmbedUnimplementedOrchestratorServiceServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedOrchestratorServiceServer) AssignTaskToWorker(context.Context
 }
 func (UnimplementedOrchestratorServiceServer) SaveResult(context.Context, *SaveResultRequest) (*SaveResultResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SaveResult not implemented")
+}
+func (UnimplementedOrchestratorServiceServer) UpdateTaskStatus(context.Context, *UpdateTaskStatusRequest) (*UpdateTaskStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTaskStatus not implemented")
 }
 func (UnimplementedOrchestratorServiceServer) mustEmbedUnimplementedOrchestratorServiceServer() {}
 
@@ -125,6 +140,24 @@ func _OrchestratorService_SaveResult_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrchestratorService_UpdateTaskStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTaskStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrchestratorServiceServer).UpdateTaskStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrchestratorService_UpdateTaskStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrchestratorServiceServer).UpdateTaskStatus(ctx, req.(*UpdateTaskStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrchestratorService_ServiceDesc is the grpc.ServiceDesc for OrchestratorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -140,6 +173,10 @@ var OrchestratorService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "SaveResult",
 			Handler:    _OrchestratorService_SaveResult_Handler,
 		},
+		{
+			MethodName: "UpdateTaskStatus",
+			Handler:    _OrchestratorService_UpdateTaskStatus_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "protov3/orchestrator.proto",
@@ -147,7 +184,6 @@ var OrchestratorService_ServiceDesc = grpc.ServiceDesc{
 
 const (
 	BackgroundWorkerService_ChangeTaskStatus_FullMethodName = "/protov3.BackgroundWorkerService/ChangeTaskStatus"
-	BackgroundWorkerService_UpdateTaskStatus_FullMethodName = "/protov3.BackgroundWorkerService/UpdateTaskStatus"
 	BackgroundWorkerService_HealthCheck_FullMethodName      = "/protov3.BackgroundWorkerService/HealthCheck"
 )
 
@@ -156,7 +192,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BackgroundWorkerServiceClient interface {
 	ChangeTaskStatus(ctx context.Context, in *ChangeTaskStatusRequest, opts ...grpc.CallOption) (*ChangeTaskStatusResponse, error)
-	UpdateTaskStatus(ctx context.Context, in *UpdateTaskStatusRequest, opts ...grpc.CallOption) (*UpdateTaskStatusResponse, error)
 	HealthCheck(ctx context.Context, in *HealthCheckRequest, opts ...grpc.CallOption) (*HealthCheckResponse, error)
 }
 
@@ -177,15 +212,6 @@ func (c *backgroundWorkerServiceClient) ChangeTaskStatus(ctx context.Context, in
 	return out, nil
 }
 
-func (c *backgroundWorkerServiceClient) UpdateTaskStatus(ctx context.Context, in *UpdateTaskStatusRequest, opts ...grpc.CallOption) (*UpdateTaskStatusResponse, error) {
-	out := new(UpdateTaskStatusResponse)
-	err := c.cc.Invoke(ctx, BackgroundWorkerService_UpdateTaskStatus_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *backgroundWorkerServiceClient) HealthCheck(ctx context.Context, in *HealthCheckRequest, opts ...grpc.CallOption) (*HealthCheckResponse, error) {
 	out := new(HealthCheckResponse)
 	err := c.cc.Invoke(ctx, BackgroundWorkerService_HealthCheck_FullMethodName, in, out, opts...)
@@ -200,7 +226,6 @@ func (c *backgroundWorkerServiceClient) HealthCheck(ctx context.Context, in *Hea
 // for forward compatibility
 type BackgroundWorkerServiceServer interface {
 	ChangeTaskStatus(context.Context, *ChangeTaskStatusRequest) (*ChangeTaskStatusResponse, error)
-	UpdateTaskStatus(context.Context, *UpdateTaskStatusRequest) (*UpdateTaskStatusResponse, error)
 	HealthCheck(context.Context, *HealthCheckRequest) (*HealthCheckResponse, error)
 	mustEmbedUnimplementedBackgroundWorkerServiceServer()
 }
@@ -211,9 +236,6 @@ type UnimplementedBackgroundWorkerServiceServer struct {
 
 func (UnimplementedBackgroundWorkerServiceServer) ChangeTaskStatus(context.Context, *ChangeTaskStatusRequest) (*ChangeTaskStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeTaskStatus not implemented")
-}
-func (UnimplementedBackgroundWorkerServiceServer) UpdateTaskStatus(context.Context, *UpdateTaskStatusRequest) (*UpdateTaskStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateTaskStatus not implemented")
 }
 func (UnimplementedBackgroundWorkerServiceServer) HealthCheck(context.Context, *HealthCheckRequest) (*HealthCheckResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HealthCheck not implemented")
@@ -250,24 +272,6 @@ func _BackgroundWorkerService_ChangeTaskStatus_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BackgroundWorkerService_UpdateTaskStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateTaskStatusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BackgroundWorkerServiceServer).UpdateTaskStatus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: BackgroundWorkerService_UpdateTaskStatus_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BackgroundWorkerServiceServer).UpdateTaskStatus(ctx, req.(*UpdateTaskStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _BackgroundWorkerService_HealthCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(HealthCheckRequest)
 	if err := dec(in); err != nil {
@@ -296,10 +300,6 @@ var BackgroundWorkerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ChangeTaskStatus",
 			Handler:    _BackgroundWorkerService_ChangeTaskStatus_Handler,
-		},
-		{
-			MethodName: "UpdateTaskStatus",
-			Handler:    _BackgroundWorkerService_UpdateTaskStatus_Handler,
 		},
 		{
 			MethodName: "HealthCheck",

@@ -3,8 +3,13 @@ package protov3;
 option go_package = "./protos";
 
 service OrchestratorService {
-  rpc AssignTaskToWorker(AssignTaskToWorkerRequest) returns (AssignTaskToWorkerResponse);
   rpc SaveResult(SaveResultRequest) returns (SaveResultResponse);
+  rpc UpdateTaskStatus(UpdateTaskStatusRequest) returns (UpdateTaskStatusResponse);
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+service BackgroundWorkerService {
+  rpc AssignTaskToWorker(AssignTaskToWorkerRequest) returns (AssignTaskToWorkerResponse);
 }
 
 message AssignTaskToWorkerRequest {
@@ -38,13 +43,6 @@ enum JobStatus {
   JOB_STATUS_STARTED=3;
 }
 
-
-
-service BackgroundWorkerService {
-  rpc ChangeTaskStatus(ChangeTaskStatusRequest) returns (ChangeTaskStatusResponse);
-  rpc UpdateTaskStatus(UpdateTaskStatusRequest) returns (UpdateTaskStatusResponse);
-  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
-}
 
 message ChangeTaskStatusRequest{
   //*_NOT_IMPLMENTED*/

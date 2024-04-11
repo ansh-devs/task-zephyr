@@ -10,7 +10,7 @@ import (
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{ForceColors: true})
-	log.WithFields(log.Fields{"status": "started"}).Info("Task-Zephyr")
+	log.WithFields(log.Fields{"status": "started", "service": "orchestrator"}).Info("Task-Zephyr")
 }
 
 func main() {
