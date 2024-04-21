@@ -15,9 +15,9 @@ func main() {
 		fmt.Println(err)
 	}
 	client := protos.NewOrchestratorServiceClient(grpcConn)
-	worker, err := client.SaveResult(context.Background(), &protos.SaveResultRequest{
-		Id:     "some_id",
-		Status: "DONE",
+	worker, err := client.HealthCheck(context.Background(), &protos.HealthCheckRequest{
+		WorkerId: "",
+		Address:  "",
 	})
 	if err != nil {
 		fmt.Println(err)

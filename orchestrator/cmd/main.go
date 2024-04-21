@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/ansh-devs/task-zephyr/orchestrator/internal"
 	"github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
 	log "github.com/sirupsen/logrus"
@@ -19,8 +20,9 @@ func main() {
 		log.Error(err)
 	}
 	srv := grpc.NewServer()
-	orchestrator := internal.NewOrchestrator(srv, ln)
+	orchestrator := internal.NewOrchestrator(srv, ln, ":8080", context.Background())
 	protos.RegisterOrchestratorServiceServer(srv, orchestrator)
 	orchestrator.PerformReflection()
-	orchestrator.Serve()
+	go orchestrator.Serve()
+	select {}
 }

@@ -2,7 +2,6 @@ package internal
 
 import (
 	"context"
-	"github.com/ansh-devs/task-zephyr/orchestrator/grpcapi"
 	pb "github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
@@ -18,7 +17,7 @@ const (
 )
 
 type Orchestrator struct {
-	grpcapi.GrpcServer
+	pb.UnimplementedOrchestratorServiceServer
 	Manager                *grpc.Server
 	ServerPort             string
 	Listener               net.Listener
@@ -41,10 +40,18 @@ type Worker struct {
 	Recipient       pb.BackgroundWorkerServiceClient
 }
 
-func NewOrchestrator(server *grpc.Server, ln net.Listener) *Orchestrator {
+func NewOrchestrator(server *grpc.Server, ln net.Listener, port string, ctx context.Context) *Orchestrator {
+	newCtx, cancelCtxFunc := context.WithCancel(ctx)
 	return &Orchestrator{
-		Manager:  server,
-		Listener: ln,
+		Manager:                server,
+		ServerPort:             port,
+		Listener:               ln,
+		WorkerPool:             make(map[string]*Worker),
+		MaxHealthCheckOverlook: 3,
+		DataStorePool:          &pgxpool.Pool{},
+		HealthCheckTTL:         2,
+		Ctx:                    newCtx,
+		CtxCancel:              cancelCtxFunc,
 	}
 }
 
