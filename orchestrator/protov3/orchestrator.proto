@@ -3,7 +3,6 @@ package protov3;
 option go_package = "./protos";
 
 service OrchestratorService {
-  rpc SaveResult(SaveResultRequest) returns (SaveResultResponse);
   rpc UpdateTaskStatus(UpdateTaskStatusRequest) returns (UpdateTaskStatusResponse);
   rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
 }
