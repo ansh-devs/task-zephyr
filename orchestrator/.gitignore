@@ -1,1 +1,2 @@
-/cmd/client.go
+./bin
+./cmd/client.go
