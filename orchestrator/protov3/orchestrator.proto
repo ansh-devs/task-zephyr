@@ -13,12 +13,14 @@ service BackgroundWorkerService {
 
 message AssignTaskToWorkerRequest {
   string job_id = 1;
-  JobType job_type = 2;
-  JobStatus job_status = 3;
+  string job_type = 2;
+  string command = 3;
 }
 
 message AssignTaskToWorkerResponse {
-  string status= 1;
+  bool isAccepted= 1;
+  bool workerId= 2;
+
 }
 
 message SaveResultRequest {

@@ -37,11 +37,12 @@ func (s *Orchestrator) cleanWorkerPool() {
 			wrkr.HealthCheckMiss++
 		}
 	}
+
 }
 
 func (s *Orchestrator) ScrapeDatabaseForJobs() {
 
-	tkr := time.NewTicker(time.Duration(time.Second * 15))
+	tkr := time.NewTicker(time.Second * 15)
 	defer tkr.Stop()
 
 	for {
@@ -59,5 +60,10 @@ func (s *Orchestrator) StartServer() error {
 }
 
 func (s *Orchestrator) gracefulShutdown() error {
+	return nil
+}
+
+func (s *Orchestrator) handleTask() error {
+
 	return nil
 }

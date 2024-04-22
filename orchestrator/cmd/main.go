@@ -23,6 +23,10 @@ func main() {
 	orchestrator := internal.NewOrchestrator(srv, ln, ":8080", context.Background())
 	protos.RegisterOrchestratorServiceServer(srv, orchestrator)
 	orchestrator.PerformReflection()
+	err = orchestrator.Start(context.Background())
+	if err != nil {
+		log.Error(err)
+	}
 	go orchestrator.Serve()
 	select {}
 }

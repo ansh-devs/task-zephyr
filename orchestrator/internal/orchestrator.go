@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	pb "github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
+	roundrobin "github.com/hlts2/round-robin"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -25,6 +26,7 @@ type Orchestrator struct {
 	WorkerPool             map[string]*Worker
 	WorkerPoolMtx          sync.RWMutex
 	AcquirableWorkerIDs    []string
+	rr                     roundrobin.RoundRobin
 	AcquirableWorkerIDsMtx sync.Mutex
 	MaxHealthCheckOverlook uint8
 	DataStorePool          *pgxpool.Pool
