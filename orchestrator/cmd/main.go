@@ -27,6 +27,5 @@ func main() {
 	if err != nil {
 		log.Error(err)
 	}
-	go orchestrator.Serve()
-	select {}
+	orchestrator.Serve()
 }

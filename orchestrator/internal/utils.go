@@ -63,7 +63,10 @@ func (s *Orchestrator) gracefulShutdown() error {
 	return nil
 }
 
-func (s *Orchestrator) handleTask() error {
-
-	return nil
+func (s *Orchestrator) areWorkersAvailable() bool {
+	if len(s.WorkerPool) == 0 {
+		return false
+	} else {
+		return true
+	}
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	pb "github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/sirupsen/logrus"
 )
 
@@ -13,7 +14,7 @@ func (s *Orchestrator) AssignTaskToWorker() {
 
 	tx, err := s.DataStorePool.Begin(ctx)
 	if err != nil {
-		logrus.Error("Error initiating the transaction in datastore")
+		logrus.Errorf("Error initiating the transaction in datastore : %v", err.Error())
 		return
 	}
 	defer func() {
@@ -22,28 +23,32 @@ func (s *Orchestrator) AssignTaskToWorker() {
 			logrus.Errorf("failed to perform rollback : %s", err.Error())
 		}
 	}()
-	result, err := tx.Query(ctx, `SELECT id, scheduled_at, command, task_type, scheduled_for, type FROM jobs WHERE scheduled_at < (NOW() + INTERVAL  '20 seconds') AND started_at IS NULL ORDER BY scheduled_at FOR UPDATE SKIP LOCKED`)
+	result, err := tx.Query(ctx, `SELECT id, scheduled_for, command, task_type FROM jobs WHERE scheduled_for < (NOW() + INTERVAL  '20 seconds') AND started_at IS NULL ORDER BY scheduled_at FOR UPDATE SKIP LOCKED`)
 	if err != nil {
-		return
+		logrus.Error(err)
 	}
+
 	defer result.Close()
 	var jobs []*pb.AssignTaskToWorkerRequest
 
 	for result.Next() {
-		var id, command, task_type string
-		if err := result.Scan(&id, &command, &task_type); err != nil {
+		var scheduledAt pgtype.Timestamptz
+		var id, command, taskType string
+		if err := result.Scan(&id, &scheduledAt, &command, &taskType); err != nil {
 			logrus.Infof("failed to scan the row %v\n", err)
 		}
+		logrus.Infof("GOT SOME DATA id=%s, time=%s, command=%s, task-type=%s", id, scheduledAt.Time.String(), command, taskType)
 		jobs = append(jobs, &pb.AssignTaskToWorkerRequest{
 			JobId:   id,
-			JobType: task_type,
+			JobType: taskType,
 			Command: command,
 		})
 	}
 
 	for _, job := range jobs {
-		if err := s.handleTask(); err != nil {
-			logrus.Error("failed to assign task to the worker")
+		if !s.areWorkersAvailable() {
+			logrus.Error("no workers to process task")
+			break
 		}
 		var workerId string
 		for id, _ := range s.WorkerPool {
@@ -51,6 +56,7 @@ func (s *Orchestrator) AssignTaskToWorker() {
 			break
 		}
 		worker := s.WorkerPool[workerId]
+		logrus.Info("assigning task to the worker")
 		workerResponse, err := worker.Recipient.AssignTaskToWorker(s.Ctx, &pb.AssignTaskToWorkerRequest{
 			JobId:   job.JobId,
 			JobType: job.JobType,
