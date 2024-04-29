@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+
 	pb "github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -51,7 +52,7 @@ func (s *Orchestrator) AssignTaskToWorker() {
 			break
 		}
 		var workerId string
-		for id, _ := range s.WorkerPool {
+		for id := range s.WorkerPool {
 			workerId = id
 			break
 		}

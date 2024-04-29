@@ -29,7 +29,7 @@ func (s *Orchestrator) cleanWorkerPool() {
 
 			wrkravailable := len(s.WorkerPool)
 			s.AcquirableWorkerIDs = make([]string, wrkravailable)
-			for k, _ := range s.WorkerPool {
+			for k := range s.WorkerPool {
 				s.AcquirableWorkerIDs = append(s.AcquirableWorkerIDs, k)
 			}
 			s.AcquirableWorkerIDsMtx.Unlock()

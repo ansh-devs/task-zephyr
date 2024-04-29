@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+
 	pb "github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -43,7 +44,7 @@ func (s *Orchestrator) HealthCheck(ctx context.Context, req *pb.HealthCheckReque
 		defer s.AcquirableWorkerIDsMtx.Unlock()
 		currentWorkers := len(s.WorkerPool)
 		s.AcquirableWorkerIDs = make([]string, 0, currentWorkers)
-		for k, _ := range s.WorkerPool {
+		for k := range s.WorkerPool {
 			s.AcquirableWorkerIDs = append(s.AcquirableWorkerIDs, k)
 		}
 		logrus.WithFields(logrus.Fields{"workerID": id, "workerAddress": addr}).Info("worker registered successfully")
