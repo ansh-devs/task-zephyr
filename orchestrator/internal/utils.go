@@ -1,6 +1,10 @@
 package internal
 
-import "time"
+import (
+	"time"
+
+	"github.com/sirupsen/logrus"
+)
 
 func (s *Orchestrator) managePool() {
 	s.Wg.Add(1)
@@ -19,6 +23,7 @@ func (s *Orchestrator) managePool() {
 }
 
 func (s *Orchestrator) cleanWorkerPool() {
+	logrus.Warn("Cleaning Worker Pool")
 	s.WorkerPoolMtx.Lock()
 	defer s.WorkerPoolMtx.Unlock()
 	for id, wrkr := range s.WorkerPool {

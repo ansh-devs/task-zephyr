@@ -3,6 +3,10 @@ package internal
 import (
 	"context"
 	"fmt"
+	"net"
+	"sync"
+	"time"
+
 	pb "github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
 	roundrobin "github.com/hlts2/round-robin"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -10,9 +14,6 @@ import (
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"net"
-	"sync"
-	"time"
 )
 
 const (
@@ -78,7 +79,7 @@ func NewOrchestrator(server *grpc.Server, ln net.Listener, port string, ctx cont
 		WorkerPool:             make(map[string]*Worker),
 		MaxHealthCheckOverlook: 3,
 		DataStorePool:          conn,
-		HealthCheckTTL:         2,
+		HealthCheckTTL:         time.Second * 2,
 		Ctx:                    newCtx,
 		CtxCancel:              cancelCtxFunc,
 	}

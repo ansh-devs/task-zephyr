@@ -64,7 +64,7 @@ func (s *Orchestrator) AssignTaskToWorker() {
 			Command: job.Command,
 		})
 		if err != nil {
-			logrus.Error("error while assigning task to the worker")
+			logrus.Errorf("error while assigning task to the worker : %v", err)
 			return
 		}
 		if workerResponse.GetIsAccepted() {
