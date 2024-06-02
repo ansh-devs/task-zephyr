@@ -2,13 +2,11 @@ package internal
 
 import (
 	"context"
-	"net"
-	"time"
-
 	"github.com/ansh-devs/task-zephyr/worker/protov3/protos"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"net"
 )
 
 type Worker struct {
@@ -16,7 +14,7 @@ type Worker struct {
 	ln             net.Listener
 	grpcSrvr       *grpc.Server
 	Port           string
-	HealthCheckTTL time.Duration
+	HealthCheckTTL int
 	Ctx            context.Context
 	CtxCancel      context.CancelFunc
 }
@@ -29,6 +27,7 @@ func NewWorker(port string) *Worker {
 		logrus.Fatalf("error fetching ip address : %v", err)
 	}
 	worker.ln = ln
+	worker.HealthCheckTTL = 1
 	worker.SetUp()
 	return &worker
 }

@@ -20,7 +20,7 @@ func (b *Worker) SendHealthCheck() {
 	}
 	workerID := uuid.NewString()
 	client := protos.NewOrchestratorServiceClient(grpcConn)
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(time.Duration(b.HealthCheckTTL))
 	ipAddr := GetIPAddr().String()
 	for range ticker.C {
 		_, err := client.HealthCheck(context.Background(), &protos.HealthCheckRequest{
