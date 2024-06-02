@@ -57,7 +57,7 @@ func (s *Orchestrator) AssignTaskToWorker() {
 			break
 		}
 		worker := s.WorkerPool[workerId]
-		logrus.Info("assigning task to the worker")
+		logrus.WithFields(logrus.Fields{"workerId": workerId, "jobId": job.JobId}).Info("assigning task to the worker")
 		workerResponse, err := worker.Recipient.AssignTaskToWorker(s.Ctx, &pb.AssignTaskToWorkerRequest{
 			JobId:   job.JobId,
 			JobType: job.JobType,
@@ -68,7 +68,15 @@ func (s *Orchestrator) AssignTaskToWorker() {
 			return
 		}
 		if workerResponse.GetIsAccepted() {
-			logrus.WithFields(logrus.Fields{"workerId": workerResponse.GetWorkerId(), "jobId": job.JobId}).Info("task has been assigned to a worker")
+			logrus.WithFields(logrus.Fields{
+				"workerId": workerResponse.GetWorkerId(),
+				"jobId":    job.JobId,
+			}).Info("task has been assigned to a worker")
+		} else {
+			logrus.WithFields(logrus.Fields{
+				"workerId": workerResponse.GetWorkerId(),
+				"jobId":    job.JobId,
+			}).Error("worker wasn't able to take the task")
 		}
 	}
 

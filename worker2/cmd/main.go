@@ -7,7 +7,7 @@ import (
 
 func init() {
 	logrus.SetFormatter(&logrus.TextFormatter{ForceColors: true})
-	logrus.WithFields(logrus.Fields{"status": "started", "service": "orchestrator"}).Info("Task-Zephyr")
+	logrus.WithFields(logrus.Fields{"status": "started", "service": "worker"}).Info("Task-Zephyr")
 }
 
 func main() {

@@ -15,12 +15,12 @@ func init() {
 }
 
 func main() {
-	ln, err := net.Listen("tcp", ":8080")
+	ln, err := net.Listen("tcp", ":50000")
 	if err != nil {
 		log.Error(err)
 	}
 	srv := grpc.NewServer()
-	orchestrator := internal.NewOrchestrator(srv, ln, ":8080", context.Background())
+	orchestrator := internal.NewOrchestrator(srv, ln, ":50000", context.Background())
 	protos.RegisterOrchestratorServiceServer(srv, orchestrator)
 	orchestrator.PerformReflection()
 	err = orchestrator.Start(context.Background())
