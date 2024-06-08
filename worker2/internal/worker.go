@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"github.com/ansh-devs/task-zephyr/worker/protov3/protos"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -15,6 +16,7 @@ type Worker struct {
 	grpcSrvr       *grpc.Server
 	Port           string
 	HealthCheckTTL int
+	workerID       string
 	Ctx            context.Context
 	CtxCancel      context.CancelFunc
 }
@@ -22,6 +24,7 @@ type Worker struct {
 func NewWorker(port string) *Worker {
 	var worker Worker
 	worker.Port = port
+	worker.workerID = uuid.NewString()
 	worker.HealthCheckTTL = 1
 	ln, err := ListenToAddr(port)
 	if err != nil {

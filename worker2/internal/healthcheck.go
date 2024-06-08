@@ -6,25 +6,23 @@ import (
 	"time"
 
 	"github.com/ansh-devs/task-zephyr/worker/protov3/protos"
-	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
-func (b *Worker) SendHealthCheck() {
+func (w *Worker) SendHealthCheck() {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	grpcConn, err := grpc.Dial("localhost:50000", opts...)
 	if err != nil {
 		logrus.Errorf("error occured in grpc.Dial : %v", err)
 	}
-	workerID := uuid.NewString()
 	client := protos.NewOrchestratorServiceClient(grpcConn)
-	ticker := time.NewTicker(time.Duration(b.HealthCheckTTL))
+	ticker := time.NewTicker(time.Duration(w.HealthCheckTTL))
 	ipAddr := GetIPAddr().String()
 	for range ticker.C {
 		_, err := client.HealthCheck(context.Background(), &protos.HealthCheckRequest{
-			WorkerId: workerID,
-			Address:  ipAddr + b.Port,
+			WorkerId: w.workerID,
+			Address:  ipAddr + w.Port,
 		})
 		if err != nil {
 			logrus.Errorf("error occured while sending healthcheck %v", err)
