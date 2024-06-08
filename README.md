@@ -7,7 +7,7 @@
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/ansh-devs/task-zephyr?style=for-the-badge&labelColor=%23000000&color=%23C1F0EC)
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ansh-devs/task-zephyr/ci.yml?branch=main&event=push&style=for-the-badge&labelColor=%23000000&color=%23C1F0EC)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ansh-devs/task-zephyr/testchecks.yml?branch=main&event=push&style=for-the-badge&labelColor=%23000000&color=%23C1F0EC)
 
 * Task Zephyr is a distributed task scheduler designed to execute various types of tasks asynchronously across multiple workers or machines. It provides a robust and scalable solution for offloading time-consuming or resource-intensive tasks from the main application, ensuring smooth and efficient operation.
 ### *Currently, task-zephyr supports two types of tasks:*
