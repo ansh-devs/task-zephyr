@@ -1,4 +1,4 @@
-name: TestOrderService
+name: Test Worker
 on: ["push"]
 jobs:
   checks:
