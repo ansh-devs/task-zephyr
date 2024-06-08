@@ -20,6 +20,8 @@ message AssignTaskToWorkerRequest {
 message AssignTaskToWorkerResponse {
   bool isAccepted= 1;
   bool workerId= 2;
+  bool isDone= 3;
+  string error= 4;
 
 }
 
@@ -50,7 +52,7 @@ message ChangeTaskStatusRequest{
 }
 message ChangeTaskStatusResponse {
   //*_NOT_IMPLMENTED*/
-  }
+}
 message UpdateTaskStatusRequest {
   //*_NOT_IMPLMENTED*/
 }
