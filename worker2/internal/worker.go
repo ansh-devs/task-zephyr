@@ -19,7 +19,8 @@ type Worker struct {
 	CtxCancel      context.CancelFunc
 }
 
-func NewWorker(port string) (worker *Worker) {
+func NewWorker(port string) *Worker {
+	var worker Worker
 	worker.Port = port
 	worker.HealthCheckTTL = 1
 	ln, err := ListenToAddr(port)
@@ -28,7 +29,7 @@ func NewWorker(port string) (worker *Worker) {
 	}
 	worker.ln = ln
 	worker.SetUp()
-	return worker
+	return &worker
 }
 
 func ListenToAddr(port string) (net.Listener, error) {

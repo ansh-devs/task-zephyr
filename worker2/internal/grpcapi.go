@@ -7,10 +7,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (b *Worker) AssignTaskToWorker(ctx context.Context, req *protos.AssignTaskToWorkerRequest) (*protos.AssignTaskToWorkerResponse, error) {
-
+func (w *Worker) AssignTaskToWorker(ctx context.Context, req *protos.AssignTaskToWorkerRequest) (*protos.AssignTaskToWorkerResponse, error) {
+	logrus.Info(req.JobType)
 	logrus.Infof("processing task with id : %s", req.GetJobId())
-	return &protos.AssignTaskToWorkerResponse{
-		IsAccepted: true,
-	}, nil
+	return &protos.AssignTaskToWorkerResponse{IsAccepted: true}, nil
 }
