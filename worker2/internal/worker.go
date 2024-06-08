@@ -19,37 +19,31 @@ type Worker struct {
 	CtxCancel      context.CancelFunc
 }
 
-func NewWorker(port string) *Worker {
-	var worker Worker
+func NewWorker(port string) (worker *Worker) {
 	worker.Port = port
+	worker.HealthCheckTTL = 1
 	ln, err := ListenToAddr(port)
 	if err != nil {
-		logrus.Fatalf("error fetching ip address : %v", err)
+		logrus.Fatalf("error while net.Listen : %v", err)
 	}
 	worker.ln = ln
-	worker.HealthCheckTTL = 1
 	worker.SetUp()
-	return &worker
+	return worker
 }
 
 func ListenToAddr(port string) (net.Listener, error) {
-	ln, err := net.Listen("tcp", port)
-	if err != nil {
-		return nil, err
-	} else {
-		return ln, nil
-	}
+	return net.Listen("tcp", port)
 }
 
-func (b *Worker) SetUp() {
-	b.grpcSrvr = grpc.NewServer()
-	protos.RegisterBackgroundWorkerServiceServer(b.grpcSrvr, b)
-	reflection.Register(b.grpcSrvr)
+func (w *Worker) SetUp() {
+	w.grpcSrvr = grpc.NewServer()
+	protos.RegisterBackgroundWorkerServiceServer(w.grpcSrvr, w)
+	reflection.Register(w.grpcSrvr)
 
 }
 
-func (b *Worker) Serve() {
-	if err := b.grpcSrvr.Serve(b.ln); err != nil {
-		logrus.Fatalf("cannot start rpc server : %v", err)
+func (w *Worker) Serve() {
+	if err := w.grpcSrvr.Serve(w.ln); err != nil {
+		logrus.Fatalf("error while starting rpc server : %v", err)
 	}
 }

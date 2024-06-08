@@ -2,7 +2,6 @@ package internal
 
 import (
 	"context"
-	"fmt"
 	"google.golang.org/grpc/credentials/insecure"
 	"time"
 
@@ -16,7 +15,7 @@ func (b *Worker) SendHealthCheck() {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	grpcConn, err := grpc.Dial("localhost:50000", opts...)
 	if err != nil {
-		fmt.Println(err)
+		logrus.Errorf("error occured in grpc.Dial : %v", err)
 	}
 	workerID := uuid.NewString()
 	client := protos.NewOrchestratorServiceClient(grpcConn)
@@ -28,17 +27,15 @@ func (b *Worker) SendHealthCheck() {
 			Address:  ipAddr + b.Port,
 		})
 		if err != nil {
-			logrus.Errorf("error occured while sending healthcheck %v", err.Error())
+			logrus.Errorf("error occured while sending healthcheck %v", err)
 			continue
 		}
-		//logrus.Info("sended heartbeat to orchestrator")
-
 	}
 
 	defer func(grpcConn *grpc.ClientConn) {
 		err := grpcConn.Close()
 		if err != nil {
-			logrus.Error(err)
+			logrus.Errorf("error occured in clientConn.Close : %v", err)
 		}
 	}(grpcConn)
 }
