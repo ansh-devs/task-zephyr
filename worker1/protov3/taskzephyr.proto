@@ -19,7 +19,8 @@ message AssignTaskToWorkerRequest {
 
 message AssignTaskToWorkerResponse {
   bool isAccepted= 1;
-  bool workerId= 2;
+  bool isDone= 2;
+  string error= 3;
 
 }
 
