@@ -69,13 +69,11 @@ func (s *Orchestrator) AssignTaskToWorker() {
 		}
 		if workerResponse.GetIsAccepted() {
 			logrus.WithFields(logrus.Fields{
-				"workerId": workerResponse.GetWorkerId(),
-				"jobId":    job.JobId,
+				"jobId": job.JobId,
 			}).Info("task has been assigned to a worker")
 		} else {
 			logrus.WithFields(logrus.Fields{
-				"workerId": workerResponse.GetWorkerId(),
-				"jobId":    job.JobId,
+				"jobId": job.JobId,
 			}).Error("worker wasn't able to take the task")
 		}
 	}
