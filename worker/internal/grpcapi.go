@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (w *Worker) AssignTaskToWorker(ctx context.Context, req *protos.AssignTaskToWorkerRequest) (*protos.AssignTaskToWorkerResponse, error) {
+func (w *Worker) AssignTaskToWorker(_ context.Context, req *protos.AssignTaskToWorkerRequest) (*protos.AssignTaskToWorkerResponse, error) {
 	logrus.WithFields(logrus.Fields{"job_id": req.GetJobId(), "job_type": req.GetJobType()}).Info("processing_task")
 	if req.JobType == "SEND_MAIL" {
 		if err := taskhandler.SendMailTask(req.GetCommand()); err != nil {

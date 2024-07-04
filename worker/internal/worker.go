@@ -43,7 +43,6 @@ func (w *Worker) SetUp() {
 	w.grpcSrvr = grpc.NewServer()
 	protos.RegisterBackgroundWorkerServiceServer(w.grpcSrvr, w)
 	reflection.Register(w.grpcSrvr)
-
 }
 
 func (w *Worker) Serve() {

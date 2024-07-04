@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"google.golang.org/grpc/credentials/insecure"
+	"os"
 	"time"
 
 	"github.com/ansh-devs/task-zephyr/worker/protov3/protos"
@@ -12,7 +13,8 @@ import (
 
 func (w *Worker) SendHealthCheck() {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	grpcConn, err := grpc.Dial("localhost:50000", opts...)
+	orchestratorUri := os.Getenv("ORCHESTRATOR_URI")
+	grpcConn, err := grpc.Dial(orchestratorUri, opts...)
 	if err != nil {
 		logrus.Errorf("error occured in grpc.Dial : %v", err)
 	}

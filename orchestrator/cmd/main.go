@@ -6,6 +6,7 @@ import (
 	"github.com/ansh-devs/task-zephyr/orchestrator/protov3/protos"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"net"
 	"os"
 )
@@ -24,7 +25,7 @@ func main() {
 	srv := grpc.NewServer()
 	orchestrator := internal.NewOrchestrator(srv, ln, port, context.Background())
 	protos.RegisterOrchestratorServiceServer(srv, orchestrator)
-	orchestrator.PerformReflection()
+	reflection.Register(orchestrator.Manager)
 	err = orchestrator.Start(context.Background())
 	if err != nil {
 		log.Error(err)

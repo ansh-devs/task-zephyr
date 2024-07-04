@@ -13,11 +13,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
-)
-
-const (
-	some = "NAW !"
 )
 
 type Orchestrator struct {
@@ -90,9 +85,4 @@ func (s *Orchestrator) Serve() {
 	if err != nil {
 		logrus.Error(err)
 	}
-}
-
-func (s *Orchestrator) PerformReflection() {
-	logrus.WithFields(logrus.Fields{"message": "using reflection!"}).Info("Task-Zephyr")
-	reflection.Register(s.Manager)
 }

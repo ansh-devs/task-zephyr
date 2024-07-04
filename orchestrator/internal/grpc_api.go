@@ -11,11 +11,12 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *Orchestrator) UpdateTaskStatus(ctx context.Context, req *pb.UpdateTaskStatusRequest) (*pb.UpdateTaskStatusResponse, error) {
+func (s *Orchestrator) UpdateTaskStatus(_ context.Context, _ *pb.UpdateTaskStatusRequest) (*pb.UpdateTaskStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTaskStatus not implemented")
+
 }
 
-func (s *Orchestrator) HealthCheck(ctx context.Context, req *pb.HealthCheckRequest) (*pb.HealthCheckResponse, error) {
+func (s *Orchestrator) HealthCheck(_ context.Context, req *pb.HealthCheckRequest) (*pb.HealthCheckResponse, error) {
 	s.WorkerPoolMtx.Lock()
 	defer s.WorkerPoolMtx.Unlock()
 	// id is used to fetch the worker id.
@@ -28,7 +29,10 @@ func (s *Orchestrator) HealthCheck(ctx context.Context, req *pb.HealthCheckReque
 	} else {
 		conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
-			logrus.WithFields(logrus.Fields{"workerID": id, "workerAddress": addr}).Error("failed to register the worker")
+			logrus.WithFields(logrus.Fields{
+				"workerID":      id,
+				"workerAddress": addr,
+			}).Error("failed to register the worker")
 			return &pb.HealthCheckResponse{
 				IsRegistered: false,
 			}, err
@@ -47,10 +51,12 @@ func (s *Orchestrator) HealthCheck(ctx context.Context, req *pb.HealthCheckReque
 		for k := range s.WorkerPool {
 			s.AcquirableWorkerIDs = append(s.AcquirableWorkerIDs, k)
 		}
-		logrus.WithFields(logrus.Fields{"workerID": id, "workerAddress": addr}).Info("worker registered successfully")
+		logrus.WithFields(logrus.Fields{
+			"workerID":      id,
+			"workerAddress": addr,
+		}).Info("worker registered successfully")
 
 	}
-	//return nil, status.Errorf(codes.Unimplemented, "method health check unimplmented.")
 	return &pb.HealthCheckResponse{
 		IsRegistered: true,
 	}, nil
