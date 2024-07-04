@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"net"
+	"os"
 )
 
 func init() {
@@ -15,12 +16,13 @@ func init() {
 }
 
 func main() {
-	ln, err := net.Listen("tcp", ":50000")
+	port := ":" + os.Getenv("PORT")
+	ln, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Error(err)
 	}
 	srv := grpc.NewServer()
-	orchestrator := internal.NewOrchestrator(srv, ln, ":50000", context.Background())
+	orchestrator := internal.NewOrchestrator(srv, ln, port, context.Background())
 	protos.RegisterOrchestratorServiceServer(srv, orchestrator)
 	orchestrator.PerformReflection()
 	err = orchestrator.Start(context.Background())
