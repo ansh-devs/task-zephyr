@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (s *Orchestrator) managePool() {
+func (s *Orchestrator) ManagePool() {
 	s.Wg.Add(1)
 	defer s.Wg.Done()
 	tkr := time.NewTicker(time.Duration(s.MaxHealthCheckOverlook) * s.HealthCheckTTL)
@@ -31,7 +31,6 @@ func (s *Orchestrator) cleanWorkerPool() {
 			_ = wrkr.Manager.Close()
 			delete(s.WorkerPool, id)
 			s.AcquirableWorkerIDsMtx.Lock()
-
 			wrkravailable := len(s.WorkerPool)
 			s.AcquirableWorkerIDs = make([]string, wrkravailable)
 			for k := range s.WorkerPool {
@@ -46,7 +45,6 @@ func (s *Orchestrator) cleanWorkerPool() {
 }
 
 func (s *Orchestrator) ScrapeDatabaseForJobs() {
-
 	tkr := time.NewTicker(time.Second * 15)
 	defer tkr.Stop()
 
@@ -58,14 +56,6 @@ func (s *Orchestrator) ScrapeDatabaseForJobs() {
 			return
 		}
 	}
-}
-
-func (s *Orchestrator) StartServer() error {
-	return nil
-}
-
-func (s *Orchestrator) gracefulShutdown() error {
-	return nil
 }
 
 func (s *Orchestrator) areWorkersAvailable() bool {

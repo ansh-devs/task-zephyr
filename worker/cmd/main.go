@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/ansh-devs/task-zephyr/worker/internal"
 	"github.com/sirupsen/logrus"
+	"os"
 )
 
 func init() {
@@ -11,7 +12,8 @@ func init() {
 }
 
 func main() {
-	srvc := internal.NewWorker(":8081")
+	port := ":" + os.Getenv("PORT")
+	srvc := internal.NewWorker(port)
 	go srvc.SendHealthCheck()
 	srvc.Serve()
 }

@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package protov3;
 option go_package = "./protos";
 
@@ -45,13 +46,6 @@ enum JobStatus {
   JOB_STATUS_STARTED=3;
 }
 
-
-message ChangeTaskStatusRequest{
-  //*_NOT_IMPLMENTED*/
-}
-message ChangeTaskStatusResponse {
-  //*_NOT_IMPLMENTED*/
-  }
 message UpdateTaskStatusRequest {
   //*_NOT_IMPLMENTED*/
 }
